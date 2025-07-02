@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kasi - CreditChek API Companion</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", "Poppins", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+          "Helvetica Neue", sans-serif;
+        /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+      }
+
+      body {
+        background-color: #f5f7fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      /* Chat Container */
+      .chat-container {
+        width: 100%;
+        max-width: 440px;
+        /* background-color: white; */
+        background: linear-gradient(
+          180deg,
+          #2563eb 0%,
+          #3b82f6 30%,
+          #60a5fa 60%,
+          #e5e7eb 100%
+        );
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 640px;
+      }
+
+      /* Header Section */
+      .header-section {
+        padding: 44px 24px 16px 16px;
+        /* border-bottom: 1px solid #e5e7eb; */
+      }
+
+      .header-section h1 {
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 120%;
+        color: #f8f8f8;
+        opacity: 0.7;
+        margin-bottom: px;
+      }
+
+      .wave {
+        display: inline-block;
+        animation: wave 2s infinite;
+      }
+      @keyframes wave {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(20deg);
+        }
+        75% {
+          transform: rotate(-10deg);
+        }
+      }
+      .language-selector {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        width: 100%;
+        /* padding: 0.75rem 1rem; */
+        box-sizing: border-box;
+        margin-top: 1.3rem;
+      }
+
+      .language-selector select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        padding-right: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background-color: white;
+        font-size: 1rem;
+        color: #374151;
+        font-family: inherit;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
+      /* Custom dropdown arrow */
+      .language-selector {
+        position: relative;
+      }
+
+      .language-selector::after {
+        content: "▼";
+        font-size: 0.75rem;
+        color: #6b7280;
+        position: absolute;
+        right: 1.75rem;
+        pointer-events: none;
+      }
+
+      /* Hover & Focus states */
+      .language-selector select:hover {
+        border-color: #9ca3af;
+      }
+
+      .language-selector select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      .header-section p {
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 120%;
+        color: #f8f8f8;
+      }
+
+      /* Welcome Section */
+      /* .welcome-section {
+            padding: 20px 24px;
+            
+        } */
+      .welcome-section {
+        /* margin: 50px 20px 24px; */
+        margin-bottom: 25px;
+        padding: 12px 16px;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #4b5563;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #e5e7eb;
+        /* width: 100%; */
+      }
+
+      .welcome-section h2 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 12px;
+      }
+
+      .welcome-section p {
+        font-size: 15px;
+        line-height: 140%;
+        color: #4b5563;
+        margin-bottom: 8px;
+      }
+
+      /* Chat Messages */
+      .chat-messages {
+        flex: 1;
+        padding: 20px 24px;
+        overflow-y: auto;
+      }
+
+      .bot-message {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      .bot-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: #e5e7eb;
+        border-radius: 50%;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+
+      .mass-content {
+        flex: 1;
+      }
+
+      .mass-header {
+        font-weight: 400;
+        margin-bottom: 8px;
+        font-size: 15px;
+        color: #000000;
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+      }
+
+      .mass-header .emoji {
+        margin-right: 6px;
+      }
+
+      .mass-text {
+        font-size: 15px;
+        line-height: 1.5;
+        color: #101828;
+        margin-bottom: 16px;
+      }
+
+      /* Questions */
+      .popular-questions {
+        margin-top: 16px;
+      }
+
+      .question {
+        padding: 12px 16px;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #4b5563;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #e5e7eb;
+        /* width: 100%; */
+      }
+
+      .question:hover {
+        background-color: #f3f4f6;
+      }
+
+      /* Input Area */
+      .input-area {
+        padding: 16px 24px;
+        border-top: 1px solid #e5e7eb;
+        background-color: white;
+        display: flex; /* New: Enable flex layout for input + button */
+        gap: 12px; /* New: Space between input and button */
+        align-items: center; /* New: Vertically center items */
+      }
+
+      .input-container {
+        position: relative;
+        flex: 1; /* New: Allow input to grow, button stays fixed */
+      }
+
+      .input-container input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+        outline: none;
+        background-color: #f9fafb;
+        color: #4b5563;
+      }
+
+      .input-container input:focus {
+        border-color: #d1d5db;
+        background-color: white;
+      }
+
+      .input-container input::placeholder {
+        color: #9ca3af;
+      }
+
+      /* ----- New: Send Button Styles ----- */
+      #send-button {
+        background-color: #3b82f6; /* Your blue (adjust if needed) */
+        color: white;
+        border: none;
+        border-radius: 50%; /* Circular button */
+        width: 42px; /* Slightly smaller than input height */
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      #send-button:hover {
+        background-color: #2563eb; /* Darker blue on hover */
+      }
+
+      #send-button i {
+        font-size: 18px; /* Icon size */
+      }
+
+      /* Optional: Disable button when input is empty */
+      #send-button:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+      .prompts-grid {
+        display: grid;
+         grid-template-columns: 1fr;
+        gap: 0.75rem;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .prompt-button {
+        padding: 12px 16px;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #4b5563;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #e5e7eb;
+      }
+
+      .prompt-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        /* left: -100%;
+        width: 100%;
+        height: 100%; */
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .prompt-button:hover {
+        background: var(--primary-solid);
+        color: white;
+        border-color: var(--primary-solid);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* .prompt-button:hover::before {
+        left: 100%;
+      } */
+
+      .chat-history {
+        /* flex: 1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        min-height: 0;  */
+        background-color: white;
+      }
+
+      @media (max-width: 768px) {
+        .prompts-grid {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 480px) {
+        .chat-container {
+          height: 100vh;
+          border-radius: 0;
+          max-width: 100%;
+        }
+
+        body {
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container app-container">
+      <div class="header-section">
+        <img src="./cred-logo.png" alt="#" />
+        <h1>Hello there <span class="wave">👋</span></h1>
+        <p>How can we help?</p>
+        <div class="language-selector">
+          <select id="language-select">
+            <option value="NodeJS">NodeJS</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="C#">C#</option>
+            <option value="Go">Go</option>
+            <option value="PHP">PHP</option>
+            <option value="Ruby">Ruby</option>
+            <option value="Rust">Rust</option>
+            <option value="Other">Other...</option>
+          </select>
+          <input
+            type="text"
+            id="custom-language"
+            placeholder="Specify language..."
+            style="display: none"
+          />
+        </div>
+      </div>
+
+      <div class="chat-messages">
+        <div class="welcome-section">
+          <h2>Welcome to Kasi</h2>
+          <p>
+            Your intelligent CreditChek API companion. Ask me anything about
+            integration, endpoints, authentication and best practices.
+          </p>
+        </div>
+        <div class="bot-message">
+          <!-- <div class="bot-avatar">✈️</div> -->
+          <div class="mass-content">
+            <div class="mass-header">
+              <img src="./blue-cred-logo.png" alt="" />
+              <div class="question">
+                <span class="wave" style="margin-right: 10px">👋 </span>Hi
+                there! How can I help?
+              </div>
+            </div>
+            <div class="mass-text">Popular questions to get you started</div>
+
+            <div class="popular-questions prompts-grid" id="prompts-grid">
+              <!-- Prompts will be dynamically inserted here -->
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+
+      <div class="chat-history" id="chat-history">
+            <!-- Chat messages will be dynamically inserted here -->
+          </div>
+
+      <div class="input-area">
+        <div class="input-container">
+          <input type="text" id="user-input" placeholder="Type a reply..." />
+        </div>
+        <button id="send-button">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const chatContent = document.getElementById("chat-content");
+        const chatHistory = document.getElementById("chat-history");
+        const userInput = document.getElementById("user-input");
+        const sendButton = document.getElementById("send-button");
+        const languageSelect = document.getElementById("language-select");
+        const customLanguageInput = document.getElementById("custom-language");
+        const promptsGrid = document.querySelector(".prompts-grid");
+        const welcomeSection = document.getElementById("welcome-section");
+        const appContainer = document.querySelector(".app-container");
+
+        // API Configuration
+        const API_BASE_URL = "http://localhost:8000";
+        let selectedLanguage = "NodeJS";
+        let chatStarted = false;
+
+        // Initialize the chat
+        initChat();
+
+        // Event Listeners
+        sendButton.addEventListener("click", sendMessage);
+        userInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+
+        languageSelect.addEventListener("change", function () {
+          if (this.value === "Other") {
+            customLanguageInput.style.display = "block";
+            customLanguageInput.focus();
+          } else {
+            customLanguageInput.style.display = "none";
+            selectedLanguage = this.value;
+            updateLanguagePreference(this.value);
+          }
+        });
+
+        customLanguageInput.addEventListener("change", function () {
+          if (this.value.trim()) {
+            selectedLanguage = this.value.trim();
+            updateLanguagePreference(this.value.trim());
+          }
+        });
+
+        // Functions
+        function initChat() {
+          localStorage.removeItem("chatMessages");
+          // Load any saved messages
+          const savedMessages =
+            JSON.parse(localStorage.getItem("chatMessages")) || [];
+
+          if (savedMessages.length > 0) {
+            chatStarted = true;
+            appContainer.classList.add("chat-started");
+            savedMessages.forEach((msg) =>
+              appendMessage(msg.role, msg.content)
+            );
+          }
+
+          // Load preconfigured prompts
+          fetchPreconfiguredPrompts();
+        }
+
+        function fetchPreconfiguredPrompts() {
+          fetch(`${API_BASE_URL}/api/prompts`)
+            .then((response) => response.json())
+            .then((prompts) => {
+              promptsGrid.innerHTML = "";
+              prompts.forEach((prompt) => {
+                const button = document.createElement("button");
+                button.className = "prompt-button";
+                button.textContent = prompt;
+                button.addEventListener("click", () =>
+                  handlePromptClick(prompt)
+                );
+                promptsGrid.appendChild(button);
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching prompts:", error);
+              // Fallback prompts if API fails
+              const fallbackPrompts = [
+                "How do I authenticate with the CreditChek API?",
+                "Show me a sample request for credit check",
+                "What are the rate limits for API calls?",
+                "How to handle API errors properly?",
+                "What SDKs are available for integration?",
+                "How to implement webhook notifications?",
+                "Show me error handling best practices",
+                "What are the available credit check endpoints?",
+              ];
+              promptsGrid.innerHTML = "";
+              fallbackPrompts.forEach((prompt) => {
+                const button = document.createElement("button");
+                button.className = "prompt-button";
+                button.textContent = prompt;
+                button.addEventListener("click", () =>
+                  handlePromptClick(prompt)
+                );
+                promptsGrid.appendChild(button);
+              });
+            });
+        }
+
+        function handlePromptClick(prompt) {
+          userInput.value = prompt;
+          sendMessage();
+        }
+
+        function sendMessage() {
+          const message = userInput.value.trim();
+          if (!message) return;
+
+          // Add user message to chat
+          appendMessage("user", message);
+          saveMessage("user", message);
+
+          // Show loading indicator
+          const loadingId = showLoadingIndicator();
+
+          // Clear input and disable send button
+          userInput.value = "";
+          sendButton.disabled = true;
+
+          fetch(`${API_BASE_URL}/api/chat`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: message,
+              language: selectedLanguage,
+            }),
+          })
+            .then((response) => {
+              const reader = response.body.getReader();
+              const decoder = new TextDecoder("utf-8");
+              let fullResponse = "";
+
+              function readStream() {
+                reader.read().then(({ done, value }) => {
+                  if (done) {
+                    removeLoadingIndicator(loadingId);
+                    sendButton.disabled = false;
+                    saveMessage("assistant", fullResponse);
+                    return;
+                  }
+
+                  const chunk = decoder.decode(value, { stream: true });
+                  const lines = chunk.split("\n");
+                  lines.forEach((line) => {
+                    if (line.startsWith("data: ")) {
+                      try {
+                        const data = JSON.parse(line.substring(6));
+                        if (data.type === "text") {
+                          appendMessageChunk("assistant", data.content);
+                          fullResponse += data.content;
+                        } else if (data.type === "code") {
+                          appendCodeSnippet(data.lang, data.content);
+                          fullResponse += data.content;
+                        }
+                      } catch (e) {
+                        console.error("Error parsing JSON:", e);
+                      }
+                    }
+                  });
+
+                  readStream();
+                });
+              }
+
+              readStream();
+            })
+            .catch((error) => {
+              removeLoadingIndicator(loadingId);
+              sendButton.disabled = false;
+              appendMessage(
+                "assistant",
+                "Error: Failed to get response from server. Please check your connection and try again."
+              );
+              console.error("Error:", error);
+            });
+        }
+
+        function updateLanguagePreference(language) {
+          fetch(`${API_BASE_URL}/api/language`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              language: language,
+            }),
+          }).catch((error) => {
+            console.error("Error updating language preference:", error);
+          });
+        }
+
+        function appendMessage(role, content) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className = `message ${role}-message`;
+
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "message-content";
+
+          // Helper function to escape HTML
+          function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+          }
+
+          // Convert markdown to HTML
+          let htmlContent = content;
+
+          // Remove markdown language indicators from code blocks
+          htmlContent = htmlContent.replace(/```(\w*)\n?/g, "```\n");
+          htmlContent = htmlContent.replace(/\[```\w*\]/g, ""); // Remove [```language] patterns
+
+          // Handle code blocks FIRST (before other processing)
+          htmlContent = htmlContent.replace(
+            /```\n?([\s\S]*?)\n?```/g,
+            function (match, code) {
+              return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+            }
+          );
+
+          // Handle inline code (after code blocks to avoid conflicts)
+          htmlContent = htmlContent.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+          // Handle headers
+          htmlContent = htmlContent.replace(/^### (.*$)/gm, "<h3>$1</h3>");
+          htmlContent = htmlContent.replace(/^## (.*$)/gm, "<h2>$1</h2>");
+          htmlContent = htmlContent.replace(/^# (.*$)/gm, "<h1>$1</h1>");
+
+          // Handle bold and italic
+          htmlContent = htmlContent.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          );
+          htmlContent = htmlContent.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+          // Convert ALL numbered lists to bullet points
+          htmlContent = htmlContent.replace(/^\d+\.\s+(.+)$/gm, "• $1<br><br>");
+
+          // Handle bullet lists
+          htmlContent = htmlContent.replace(
+            /^(\*\s+.*?)(?=\n\*\s+|\n\n|\n*$)/gms,
+            function (match) {
+              const items = match.split(/\n(?=\*\s+)/);
+              const listItems = items
+                .map((item) => {
+                  const content = item.replace(/^\*\s*/, "").trim();
+                  return `<li>${content}</li>`;
+                })
+                .join("");
+              return `<ul>${listItems}</ul>`;
+            }
+          );
+
+          // Handle line breaks
+          htmlContent = htmlContent.replace(/\n\n+/g, "</p><p>");
+          htmlContent = htmlContent.replace(/\n/g, "<br>");
+          htmlContent = `<p>${htmlContent}</p>`;
+
+          // Clean up empty paragraphs and fix formatting
+          htmlContent = htmlContent.replace(/<p><\/p>/g, "");
+          htmlContent = htmlContent.replace(
+            /<p>(<pre>[\s\S]*?<\/pre>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<ul>[\s\S]*?<\/ul>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<h[1-6]>[\s\S]*?<\/h[1-6]>)<\/p>/g,
+            "$1"
+          );
+
+          contentDiv.innerHTML = htmlContent;
+          messageDiv.appendChild(contentDiv);
+          chatHistory.appendChild(messageDiv);
+
+          // Scroll to bottom
+          chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        function appendMessageChunk(role, content) {
+          const lastMessage = chatHistory.lastElementChild;
+          if (
+            lastMessage &&
+            lastMessage.classList.contains(role + "-message") &&
+            lastMessage.querySelector(".message-content")
+          ) {
+            const contentDiv = lastMessage.querySelector(".message-content");
+            contentDiv.innerHTML += formatChunk(content);
+          } else {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${role}-message`;
+
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "message-content";
+            contentDiv.innerHTML = formatChunk(content);
+
+            messageDiv.appendChild(contentDiv);
+            chatHistory.appendChild(messageDiv);
+          }
+
+          // Scroll to bottom
+          chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        function formatChunk(text) {
+          // Helper function to escape HTML
+          function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+          }
+
+          // Convert markdown to HTML
+          let htmlContent = text;
+
+          // Remove markdown language indicators from code blocks
+          htmlContent = htmlContent.replace(/```(\w*)\n?/g, "```\n");
+          htmlContent = htmlContent.replace(/\[```\w*\]/g, ""); // Remove [```language] patterns
+
+          // Handle code blocks FIRST (before other processing)
+          htmlContent = htmlContent.replace(
+            /```\n?([\s\S]*?)\n?```/g,
+            function (match, code) {
+              return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+            }
+          );
+
+          // Handle inline code (after code blocks to avoid conflicts)
+          htmlContent = htmlContent.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+          // Handle headers
+          htmlContent = htmlContent.replace(/^### (.*$)/gm, "<h3>$1</h3>");
+          htmlContent = htmlContent.replace(/^## (.*$)/gm, "<h2>$1</h2>");
+          htmlContent = htmlContent.replace(/^# (.*$)/gm, "<h1>$1</h1>");
+
+          // Handle bold and italic
+          htmlContent = htmlContent.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          );
+          htmlContent = htmlContent.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+          // Convert ALL numbered lists to bullet points
+          htmlContent = htmlContent.replace(/^\d+\.\s+(.+)$/gm, "• $1<br><br>");
+
+          // Handle bullet lists
+          htmlContent = htmlContent.replace(
+            /^(\*\s+.*?)(?=\n\*\s+|\n\n|\n*$)/gms,
+            function (match) {
+              const items = match.split(/\n(?=\*\s+)/);
+              const listItems = items
+                .map((item) => {
+                  const content = item.replace(/^\*\s*/, "").trim();
+                  return `<li>${content}</li>`;
+                })
+                .join("");
+              return `<ul>${listItems}</ul>`;
+            }
+          );
+
+          // Handle line breaks
+          htmlContent = htmlContent.replace(/\n\n+/g, "</p><p>");
+          htmlContent = htmlContent.replace(/\n/g, "<br>");
+          htmlContent = `<p>${htmlContent}</p>`;
+
+          // Clean up empty paragraphs and fix formatting
+          htmlContent = htmlContent.replace(/<p><\/p>/g, "");
+          htmlContent = htmlContent.replace(
+            /<p>(<pre>[\s\S]*?<\/pre>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<ul>[\s\S]*?<\/ul>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<h[1-6]>[\s\S]*?<\/h[1-6]>)<\/p>/g,
+            "$1"
+          );
+
+          return htmlContent;
+        }
+
+        function formatResponseForChunk(text) {
+          let htmlContent = escapeHtml(text);
+
+          // Handle code blocks FIRST (before other processing)
+          htmlContent = htmlContent.replace(
+            /```(\w*)\n?([\s\S]*?)\n?```/g,
+            function (match, lang, code) {
+              return `<pre><code class="language-${
+                lang || "text"
+              }">${escapeHtml(code.trim())}</code></pre>`;
+            }
+          );
+
+          // Handle inline code (after code blocks to avoid conflicts)
+          htmlContent = htmlContent.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+          // Handle headers
+          htmlContent = htmlContent.replace(/^### (.*$)/gm, "<h3>$1</h3>"); // h3
+          htmlContent = htmlContent.replace(/^## (.*$)/gm, "<h2>$1</h2>"); // h2
+          htmlContent = htmlContent.replace(/^# (.*$)/gm, "<h1>$1</h1>"); // h1
+
+          // Handle bold and italic
+          htmlContent = htmlContent.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          ); // bold
+          htmlContent = htmlContent.replace(/\*(.*?)\*/g, "<em>$1</em>"); // italic
+
+          // Handle numbered lists (improved regex)
+          htmlContent = htmlContent.replace(/^\d+\.\s+(.+)$/gm, "• $1<br>");
+
+          // Handle bullet lists
+          htmlContent = htmlContent.replace(
+            /^(\*\s+.*?)(?=\n\*\s+|\n\n|\n*$)/gms,
+            function (match) {
+              const items = match.split(/\n(?=\*\s+)/);
+              const listItems = items
+                .map((item) => {
+                  const content = item.replace(/^\*\s*/, "").trim();
+                  return `<li>${content}</li>`;
+                })
+                .join("");
+              return `<ul>${listItems}</ul>`;
+            }
+          );
+
+          // Handle line breaks (convert single newlines to <br> but preserve paragraph breaks)
+          htmlContent = htmlContent.replace(/\n\n+/g, "</p><p>"); // Double newlines become paragraph breaks
+          htmlContent = htmlContent.replace(/\n/g, "<br>"); // Single newlines become line breaks
+          htmlContent = `<p>${htmlContent}</p>`; // Wrap in paragraph tags
+
+          // Clean up empty paragraphs and fix pre/code block formatting
+          htmlContent = htmlContent.replace(/<p><\/p>/g, "");
+          htmlContent = htmlContent.replace(
+            /<p>(<pre>[\s\S]*?<\/pre>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<ol>[\s\S]*?<\/ol>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<ul>[\s\S]*?<\/ul>)<\/p>/g,
+            "$1"
+          );
+          htmlContent = htmlContent.replace(
+            /<p>(<h[1-6]>[\s\S]*?<\/h[1-6]>)<\/p>/g,
+            "$1"
+          );
+
+          return htmlContent;
+        }
+
+        function formatResponse(text) {
+          // Simple markdown to HTML conversion that works with partial content
+          let htmlContent = escapeHtml(text);
+
+          // Handle bold and italic (partial tags won't break the display)
+          htmlContent = htmlContent.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          );
+          htmlContent = htmlContent.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+          // Handle line breaks
+          htmlContent = htmlContent.replace(/\n/g, "<br>");
+
+          // Don't try to process incomplete code blocks
+          if (!text.includes("```")) {
+            return htmlContent;
+          }
+
+          // For code blocks, we'll handle them separately in the streaming logic
+          return htmlContent.replace(/```[\s\S]*?```/g, function (match) {
+            return (
+              "<pre><code>" +
+              escapeHtml(match.replace(/```/g, "")) +
+              "</code></pre>"
+            );
+          });
+        }
+
+        function escapeHtml(unsafe) {
+          return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function appendCodeSnippet(language, code) {
+          const pre = document.createElement("pre");
+          const codeElement = document.createElement("code");
+          codeElement.className = `language-${language.toLowerCase()}`;
+          codeElement.textContent = code;
+          pre.appendChild(codeElement);
+
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message assistant-message";
+          messageDiv.appendChild(pre);
+          chatHistory.appendChild(messageDiv);
+
+          // Scroll to bottom
+          chatContent.scrollTop = chatContent.scrollHeight;
+        }
+        function formatResponse(text) {
+          // Simple markdown to HTML conversion that works with partial content
+          let htmlContent = escapeHtml(text);
+
+          // Handle bold and italic (partial tags won't break the display)
+          htmlContent = htmlContent.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          );
+          htmlContent = htmlContent.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+          // Handle line breaks
+          htmlContent = htmlContent.replace(/\n/g, "<br>");
+
+          // Don't try to process incomplete code blocks
+          if (!text.includes("```")) {
+            return htmlContent;
+          }
+
+          // For code blocks, we'll handle them separately in the streaming logic
+          return htmlContent.replace(/```[\s\S]*?```/g, function (match) {
+            return (
+              "<pre><code>" +
+              escapeHtml(match.replace(/```/g, "")) +
+              "</code></pre>"
+            );
+          });
+        }
+
+        function showLoadingIndicator() {
+          const id = "loading-" + Date.now();
+          const loadingDiv = document.createElement("div");
+          loadingDiv.className = "message assistant-message";
+          loadingDiv.id = id;
+
+          const loadingContent = document.createElement("div");
+          loadingContent.className = "loading-dots";
+          loadingContent.innerHTML = `
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                `;
+
+          loadingDiv.appendChild(loadingContent);
+          chatHistory.appendChild(loadingDiv);
+          chatContent.scrollTop = chatContent.scrollHeight;
+
+          return id;
+        }
+
+        function removeLoadingIndicator(id) {
+          const loadingElement = document.getElementById(id);
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+        }
+
+        function saveMessage(role, content) {
+          const messages =
+            JSON.parse(localStorage.getItem("chatMessages")) || [];
+          messages.push({ role, content });
+          localStorage.setItem("chatMessages", JSON.stringify(messages));
+        }
+
+        function escapeHtml(unsafe) {
+          return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+      });
+    </script>
+  </body>
+</html>
